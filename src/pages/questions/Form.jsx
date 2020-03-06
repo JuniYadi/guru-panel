@@ -74,7 +74,11 @@ class Form extends Component {
     }
   }
 
-  
+  componentWillUnmount(){
+    const mathTypeEls = document.querySelectorAll(`div[id='wrs_modal_dialogContainer[0]'], 
+                                                   div[id='wrs_modal_dialogContainer[1]']`);
+    mathTypeEls.forEach(mathTypeEl => mathTypeEl.remove());
+  }
   onChangeModel = (type, value) => {
     let val = value;
     this.setState({ model: { ...this.state.model, [type]: val } });
@@ -88,7 +92,7 @@ class Form extends Component {
       .then(res => {
         const questionsource = res.map(x => ({
           value: x.id,
-          label: x.sourceInfo
+          label: `${x.year}  ${x.sourceInfo}`
         }));
         this.setState({ questionsource: questionsource });
         callback([...questionsource]);
@@ -277,7 +281,7 @@ class Form extends Component {
           <div className="row">
             <div className="col-md-8">
               <ContentHeader
-                title={`${isEntry ? "Create A" : "Edit"} Question`}
+                title={`${isEntry ? "Create " : "Edit"} Question`}
               />
             </div>
             <div className="col-md-4 p-2">
