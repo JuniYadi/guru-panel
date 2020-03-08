@@ -352,7 +352,7 @@ Resources:
                 Version: '1'
                 Provider: CodeBuild
               Configuration:
-                ProjectName: !Ref rCodeBuildCICDProd
+                ProjectName: !Ref rCodeBuildCICD
               RunOrder: 1
               InputArtifacts:
                 - Name: SourceOutput
@@ -371,7 +371,7 @@ Resources:
                 Extract: true
                 BucketName: !Ref rFrontendContentBucketStaging
               InputArtifacts:
-                - Name: BuildCICDOutput
+                - Name: BuildCICDOutputStaging
               RunOrder: 1
             - Name: cleanup-old-files
               ActionTypeId:
@@ -447,7 +447,7 @@ Resources:
     DependsOn:
       - rArtifactStoreBucket
     Properties:
-      Name: !Sub ${pSolutionNaming}-cicd-package-cb
+      Name: !Sub ${pSolutionNaming}-cicd-package-stg
       Description: 'Package artifact for CICD Pipeline'
       ServiceRole: !GetAtt [rCodeBuildRole, Arn]
       Artifacts:
@@ -527,7 +527,7 @@ Resources:
     DependsOn:
       - rArtifactStoreBucket
     Properties:
-      Name: !Sub ${pSolutionNaming}-cicd-cleanup-cb
+      Name: !Sub ${pSolutionNaming}-cicd-cleanup-stg
       Description: 'Package artifact for CICD Pipeline'
       ServiceRole: !GetAtt [rCodeBuildRole, Arn]
       Artifacts:
@@ -552,7 +552,7 @@ Resources:
                 - set -ex
                 - printenv
                 - ls -R
-                - aws s3 sync . "s3://${FrontendContentBucketStaging}" --delete
+                - aws s3 sync . "s3://${FrontendContentBucket}" --delete
           artifacts:
             files: "**/*"
       TimeoutInMinutes: 10
